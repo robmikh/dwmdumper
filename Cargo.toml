@@ -1,0 +1,22 @@
+[package]
+name = "dwmdumper"
+version = "0.1.0"
+edition = "2018"
+
+[dependencies]
+
+[dependencies.windows]
+version = "0.27.0"
+features = [
+    "alloc",
+    "Win32_Foundation",
+    "Win32_Storage_FileSystem",
+    "Win32_System_Diagnostics_Debug",
+    "Win32_System_Kernel",
+    "Win32_System_Memory",
+    "Win32_System_RemoteDesktop",
+    "Win32_System_Threading",
+    "Win32_System_WindowsProgramming",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_UI_WindowsAndMessaging",
+]
