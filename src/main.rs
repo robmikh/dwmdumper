@@ -1,17 +1,15 @@
+mod debug;
 mod handle;
 mod privilege;
 mod process;
 mod wide_string;
 
 use windows::{
-    core::{Handle, Result},
-    Win32::System::{
-        RemoteDesktop::ProcessIdToSessionId,
-        Threading::{GetCurrentProcessId, OpenProcess, PROCESS_QUERY_INFORMATION, PROCESS_VM_READ},
-    },
+    core::Result,
+    Win32::System::{RemoteDesktop::ProcessIdToSessionId, Threading::GetCurrentProcessId},
 };
 
-use crate::{privilege::set_debug_privilege, process::ProcessIterator};
+use crate::{debug::take_memory_dump, privilege::set_debug_privilege, process::ProcessIterator};
 
 fn main() -> Result<()> {
     // We first need to give ourselves debug privileges.
@@ -35,18 +33,11 @@ fn main() -> Result<()> {
         .expect("Could not find a dwm process for this session!");
     println!("Found dwm.exe with pid: {}", process_id);
 
-    // This might fail if we aren't running as admin
-    let process_handle = unsafe {
-        OpenProcess(
-            PROCESS_QUERY_INFORMATION | PROCESS_VM_READ,
-            false,
-            process_id,
-        )
-        .ok()?
-    };
-
+    // Take the memory dump
     println!("Taking memory dump...");
+    take_memory_dump(process_id, "dwmdump.dmp")?;
 
+    println!("Done!");
     Ok(())
 }
 

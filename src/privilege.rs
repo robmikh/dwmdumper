@@ -1,5 +1,5 @@
 use windows::{
-    core::{Handle, Result},
+    core::Result,
     Win32::{
         Foundation::{HANDLE, LUID, PWSTR},
         Security::{
