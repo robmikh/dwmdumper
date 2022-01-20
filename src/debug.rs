@@ -5,7 +5,11 @@ use windows::{
             CreateFileW, CREATE_ALWAYS, FILE_ACCESS_FLAGS, FILE_ATTRIBUTE_NORMAL, FILE_SHARE_MODE,
         },
         System::{
-            Diagnostics::Debug::{MiniDumpWithFullMemory, MiniDumpWriteDump},
+            Diagnostics::Debug::{
+                MiniDumpWithAvxXStateContext, MiniDumpWithFullMemory, MiniDumpWithFullMemoryInfo,
+                MiniDumpWithHandleData, MiniDumpWithIptTrace, MiniDumpWithThreadInfo,
+                MiniDumpWithTokenInformation, MiniDumpWithUnloadedModules, MiniDumpWriteDump,
+            },
             SystemServices::{GENERIC_READ, GENERIC_WRITE},
             Threading::{OpenProcess, PROCESS_QUERY_INFORMATION, PROCESS_VM_READ},
         },
@@ -48,7 +52,14 @@ pub fn take_memory_dump(process_id: u32, file_name: &str) -> Result<()> {
             &process_handle.0,
             process_id,
             &handle.0,
-            MiniDumpWithFullMemory,
+            MiniDumpWithFullMemory
+                | MiniDumpWithHandleData
+                | MiniDumpWithUnloadedModules
+                | MiniDumpWithFullMemoryInfo
+                | MiniDumpWithThreadInfo
+                | MiniDumpWithTokenInformation
+                | MiniDumpWithAvxXStateContext
+                | MiniDumpWithIptTrace,
             std::ptr::null_mut(),
             std::ptr::null_mut(),
             std::ptr::null_mut(),
