@@ -1,9 +1,7 @@
 use windows::{
-    core::{Handle, Result},
+    core::Result,
     Win32::{
-        Storage::FileSystem::{
-            CreateFileW, CREATE_ALWAYS, FILE_ACCESS_FLAGS, FILE_ATTRIBUTE_NORMAL, FILE_SHARE_MODE,
-        },
+        Storage::FileSystem::{CreateFileW, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL},
         System::{
             Diagnostics::Debug::{
                 MiniDumpWithAvxXStateContext, MiniDumpWithFullMemory, MiniDumpWithFullMemoryInfo,
@@ -36,8 +34,8 @@ pub fn take_memory_dump(process_id: u32, file_name: &str) -> Result<()> {
             let file_name = file_name.to_wide();
             let handle = CreateFileW(
                 file_name.as_pwstr(),
-                FILE_ACCESS_FLAGS(GENERIC_READ | GENERIC_WRITE),
-                FILE_SHARE_MODE(0),
+                GENERIC_READ | GENERIC_WRITE,
+                0,
                 std::ptr::null(),
                 CREATE_ALWAYS,
                 FILE_ATTRIBUTE_NORMAL,

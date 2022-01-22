@@ -5,7 +5,6 @@ use windows::{
         Security::{
             AdjustTokenPrivileges, LookupPrivilegeValueW, LUID_AND_ATTRIBUTES,
             SE_PRIVILEGE_ENABLED, TOKEN_ADJUST_PRIVILEGES, TOKEN_PRIVILEGES,
-            TOKEN_PRIVILEGES_ATTRIBUTES,
         },
         System::Threading::{GetCurrentProcess, OpenProcessToken},
     },
@@ -35,11 +34,7 @@ fn get_process_token() -> Result<AutoCloseHandle> {
 
 fn set_privilege(token: &HANDLE, privilege_name: PWSTR, enable: bool) -> Result<()> {
     let mut luid = LUID::default();
-    let attribute = if enable {
-        SE_PRIVILEGE_ENABLED
-    } else {
-        TOKEN_PRIVILEGES_ATTRIBUTES(0)
-    };
+    let attribute = if enable { SE_PRIVILEGE_ENABLED } else { 0 };
     unsafe {
         LookupPrivilegeValueW(None, privilege_name, &mut luid).ok()?;
         let token_privileges = TOKEN_PRIVILEGES {
