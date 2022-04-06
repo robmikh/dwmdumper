@@ -3,7 +3,6 @@ mod handle;
 mod hotkey;
 mod privilege;
 mod process;
-mod wide_string;
 
 use hotkey::HotKey;
 use windows::{
