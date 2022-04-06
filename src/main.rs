@@ -1,6 +1,7 @@
 mod debug;
 mod handle;
 mod hotkey;
+mod integrity;
 mod privilege;
 mod process;
 
@@ -17,11 +18,32 @@ use windows::{
     },
 };
 
-use crate::{debug::take_memory_dump, privilege::set_debug_privilege, process::ProcessIterator};
+use crate::{
+    debug::take_memory_dump,
+    integrity::{
+        get_current_process_token, get_integrity_level_from_process_token, IntegrityLevel,
+    },
+    privilege::set_debug_privilege,
+    process::ProcessIterator,
+};
 
 fn main() -> Result<()> {
     // TODO: Configurable file name/path
     let file_name = "dwmdump.dmp";
+
+    // Make sure we're running as admin
+    let process_token = get_current_process_token();
+    let integrity_level =
+        get_integrity_level_from_process_token(&process_token).unwrap_or(IntegrityLevel::Untrusted);
+    println!(
+        "Currently detected integrity level: {}",
+        integrity_level.display_str()
+    );
+    if !integrity_level.is_admin() {
+        println!("This tool requies admin privileges to properly dump the memory of DWM.exe.");
+        println!("Please try again using an admin command prompt/terminal.");
+        std::process::exit(1);
+    }
 
     // We first need to give ourselves debug privileges.
     set_debug_privilege(true)?;
