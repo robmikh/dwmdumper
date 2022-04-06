@@ -40,7 +40,7 @@ fn main() -> Result<()> {
         integrity_level.display_str()
     );
     if !integrity_level.is_admin() {
-        println!("This tool requies admin privileges to properly dump the memory of DWM.exe.");
+        println!("This tool requies admin privileges to properly dump the memory of dwm.exe.");
         println!("Please try again using an admin command prompt/terminal.");
         std::process::exit(1);
     }
