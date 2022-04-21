@@ -1,6 +1,9 @@
 mod hotkey;
 
-use dwmdumperlib::{get_integrity_level_for_current_process, IntegrityLevel, set_debug_privilege, find_and_dump_dwm, get_session_for_current_process};
+use dwmdumperlib::{
+    find_and_dump_dwm, get_integrity_level_for_current_process, get_session_for_current_process,
+    set_debug_privilege, IntegrityLevel,
+};
 use hotkey::HotKey;
 use windows::{
     core::Result,
