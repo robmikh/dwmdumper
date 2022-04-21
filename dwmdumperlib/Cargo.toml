@@ -1,10 +1,9 @@
 [package]
-name = "dwmdumper"
-version = "0.4.0"
+name = "dwmdumperlib"
+version = "0.5.0"
 edition = "2018"
 
 [dependencies]
-dwmdumperlib = { path = "dwmdumperlib" }
 
 [dependencies.windows]
 version = "0.35.0"
