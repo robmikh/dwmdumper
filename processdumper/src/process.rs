@@ -72,14 +72,16 @@ impl ProcessInfo {
         let process_id = info.UniqueProcessId.0 as u32;
         let session_id = info.SessionId;
         let name = if process_id != 0 {
-            unsafe {
+            let mut name = unsafe {
                 let slice = std::slice::from_raw_parts(
                     info.ImageName.Buffer.0,
                     info.ImageName.Length as usize,
                 );
                 // Ideally we wouldn't use the lossy version... but it fails on some names
                 String::from_utf16_lossy(slice)
-            }
+            };
+            truncate_to_first_null_char(&mut name);
+            name
         } else {
             "System Idle Process".to_owned()
         };
@@ -100,5 +102,11 @@ impl ProcessInfo {
 
     pub fn session_id(&self) -> u32 {
         self.session_id
+    }
+}
+
+fn truncate_to_first_null_char(input: &mut String) {
+    if let Some(index) = input.find('\0') {
+        input.truncate(index);
     }
 }
