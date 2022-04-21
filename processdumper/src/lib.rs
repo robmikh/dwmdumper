@@ -2,7 +2,7 @@ mod debug;
 mod handle;
 mod integrity;
 mod privilege;
-mod process;
+pub mod process;
 
 pub use debug::take_memory_dump;
 pub use integrity::IntegrityLevel;
