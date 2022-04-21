@@ -6,12 +6,12 @@ version = 3
 name = "dwmdumper"
 version = "0.5.0"
 dependencies = [
- "dwmdumperlib",
+ "processdumper",
  "windows",
 ]
 
 [[package]]
-name = "dwmdumperlib"
+name = "processdumper"
 version = "0.5.0"
 dependencies = [
  "windows",

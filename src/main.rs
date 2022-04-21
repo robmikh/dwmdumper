@@ -1,10 +1,10 @@
 mod hotkey;
 
-use dwmdumperlib::{
-    find_and_dump_dwm, get_integrity_level_for_current_process, get_session_for_current_process,
-    set_debug_privilege, IntegrityLevel,
-};
 use hotkey::HotKey;
+use processdumper::{
+    find_process_id_with_name_in_session, get_integrity_level_for_current_process,
+    get_session_for_current_process, set_debug_privilege, take_memory_dump, IntegrityLevel,
+};
 use windows::{
     core::Result,
     Win32::{
@@ -56,6 +56,20 @@ fn main() -> Result<()> {
     dump_path.push(file_name);
 
     println!("Done! Dump written to \"{}\"", dump_path.display());
+    Ok(())
+}
+
+fn find_and_dump_dwm(session_id: u32, file_name: &str) -> Result<()> {
+    // Find the dwm for the session
+    println!("Looking for the dwm process of the current session...");
+    let process_id = find_process_id_with_name_in_session("dwm.exe", session_id)?
+        .expect("Could not find a dwm process for this session!");
+    println!("Found dwm.exe with pid: {}", process_id);
+
+    // Take the memory dump
+    println!("Taking memory dump...");
+    take_memory_dump(process_id, file_name)?;
+
     Ok(())
 }
 
