@@ -68,7 +68,7 @@ pub fn get_integrity_level_from_process_token(process_token: &HANDLE) -> Result<
         )
         .ok();
         if let Err(error) = &result {
-            if error.win32_error().unwrap() != ERROR_INSUFFICIENT_BUFFER {
+            if error.code() != ERROR_INSUFFICIENT_BUFFER.into() {
                 result?;
             }
         }
