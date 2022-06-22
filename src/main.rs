@@ -1,3 +1,4 @@
+mod cli;
 mod hotkey;
 
 use hotkey::HotKey;
@@ -16,9 +17,10 @@ use windows::{
     },
 };
 
+use crate::cli::{Args, ExecutionMode};
+
 fn main() -> Result<()> {
-    // TODO: Configurable file name/path
-    let file_name = "dwmdump.dmp";
+    let args = Args::from_args()?;
 
     // Make sure we're running as admin
     let integrity_level =
@@ -43,19 +45,22 @@ fn main() -> Result<()> {
     let current_session = get_session_for_current_process()?;
     println!("Current session id: {}", current_session);
 
-    // Wait for the user to press the key-combo before we
-    // look for the dwm and collect a dump.
-    println!("Press SHIFT+CTRL+D to collect a dump of dwm.exe...");
-    pump_messages(|| -> Result<bool> {
-        find_and_dump_dwm(current_session, file_name)?;
-        Ok(true)
-    })?;
+    match args.mode {
+        ExecutionMode::Immediate => {
+            find_and_dump_dwm(current_session, &args.output_path)?;
+        }
+        ExecutionMode::KeyCombo => {
+            // Wait for the user to press the key-combo before we
+            // look for the dwm and collect a dump.
+            println!("Press SHIFT+CTRL+D to collect a dump of dwm.exe...");
+            pump_messages(|| -> Result<bool> {
+                find_and_dump_dwm(current_session, &args.output_path)?;
+                Ok(true)
+            })?;
+        }
+    }
 
-    // TODO: Properly evaulate this
-    let mut dump_path = std::env::current_dir().unwrap();
-    dump_path.push(file_name);
-
-    println!("Done! Dump written to \"{}\"", dump_path.display());
+    println!("Done! Dump written to \"{}\"", &args.output_path);
     Ok(())
 }
 
