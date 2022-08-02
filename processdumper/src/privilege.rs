@@ -7,7 +7,10 @@ use windows::{
             SE_PRIVILEGE_ENABLED, TOKEN_ADJUST_PRIVILEGES, TOKEN_PRIVILEGES,
             TOKEN_PRIVILEGES_ATTRIBUTES,
         },
-        System::Threading::{GetCurrentProcess, OpenProcessToken},
+        System::{
+            SystemServices::SE_DEBUG_NAME,
+            Threading::{GetCurrentProcess, OpenProcessToken},
+        },
     },
 };
 
@@ -15,8 +18,7 @@ use crate::handle::AutoCloseHandle;
 
 pub fn set_debug_privilege(enable: bool) -> Result<()> {
     let token = get_process_token()?;
-    let se_debug_name = get_debug_privilege_name();
-    set_privilege(&token.0, se_debug_name, enable)?;
+    set_privilege(&token.0, SE_DEBUG_NAME, enable)?;
     Ok(())
 }
 
@@ -58,10 +60,4 @@ fn set_privilege(token: &HANDLE, privilege_name: &str, enable: bool) -> Result<(
         .ok()?;
     }
     Ok(())
-}
-
-// Workaround for missing SE_DEBUG_NAME
-// https://docs.microsoft.com/en-us/windows/win32/secauthz/privilege-constants
-fn get_debug_privilege_name() -> &'static str {
-    "SeDebugPrivilege"
 }
