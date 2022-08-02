@@ -1,5 +1,5 @@
 use windows::{
-    core::Result,
+    core::{Result, HSTRING},
     Win32::{
         Storage::FileSystem::{
             CreateFileW, CREATE_ALWAYS, FILE_ACCESS_FLAGS, FILE_ATTRIBUTE_NORMAL, FILE_SHARE_MODE,
@@ -33,7 +33,7 @@ pub fn take_memory_dump(process_id: u32, file_name: &str) -> Result<()> {
         // Create the dump file on disk
         let handle = {
             let handle = CreateFileW(
-                file_name,
+                &HSTRING::from(file_name),
                 FILE_ACCESS_FLAGS(GENERIC_READ | GENERIC_WRITE),
                 FILE_SHARE_MODE(0),
                 std::ptr::null(),
@@ -46,9 +46,9 @@ pub fn take_memory_dump(process_id: u32, file_name: &str) -> Result<()> {
 
         // Write the dump to the file
         MiniDumpWriteDump(
-            &process_handle.0,
+            process_handle.0,
             process_id,
-            &handle.0,
+            handle.0,
             MiniDumpWithFullMemory
                 | MiniDumpWithHandleData
                 | MiniDumpWithUnloadedModules

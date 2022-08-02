@@ -60,7 +60,7 @@ pub fn get_integrity_level_from_process_token(process_token: &HANDLE) -> Result<
     let mut information_length = 0;
     unsafe {
         let result = GetTokenInformation(
-            process_token,
+            *process_token,
             TokenIntegrityLevel,
             std::ptr::null_mut(),
             0,
@@ -81,7 +81,7 @@ pub fn get_integrity_level_from_process_token(process_token: &HANDLE) -> Result<
     // Get the data for our integrity level
     unsafe {
         GetTokenInformation(
-            process_token,
+            *process_token,
             TokenIntegrityLevel,
             info as *mut _,
             information_length,

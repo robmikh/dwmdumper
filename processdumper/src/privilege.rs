@@ -1,5 +1,5 @@
 use windows::{
-    core::Result,
+    core::{Result, HSTRING},
     Win32::{
         Foundation::{HANDLE, LUID},
         Security::{
@@ -38,7 +38,7 @@ fn set_privilege(token: &HANDLE, privilege_name: &str, enable: bool) -> Result<(
         TOKEN_PRIVILEGES_ATTRIBUTES(0)
     };
     unsafe {
-        LookupPrivilegeValueW(None, privilege_name, &mut luid).ok()?;
+        LookupPrivilegeValueW(None, &HSTRING::from(privilege_name), &mut luid).ok()?;
         let token_privileges = TOKEN_PRIVILEGES {
             PrivilegeCount: 1,
             Privileges: [LUID_AND_ATTRIBUTES {
@@ -48,7 +48,7 @@ fn set_privilege(token: &HANDLE, privilege_name: &str, enable: bool) -> Result<(
             ..Default::default()
         };
         AdjustTokenPrivileges(
-            token,
+            *token,
             false,
             &token_privileges,
             0,
