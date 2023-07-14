@@ -1,9 +1,8 @@
 use windows::{
     core::{Result, HSTRING},
     Win32::{
-        Storage::FileSystem::{
-            CreateFileW, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, FILE_SHARE_MODE,
-        },
+        Foundation::{GENERIC_READ, GENERIC_WRITE},
+        Storage::FileSystem::{CreateFileW, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, FILE_SHARE_MODE},
         System::{
             Diagnostics::Debug::{
                 MiniDumpWithAvxXStateContext, MiniDumpWithFullMemory, MiniDumpWithFullMemoryInfo,
@@ -11,7 +10,7 @@ use windows::{
                 MiniDumpWithTokenInformation, MiniDumpWithUnloadedModules, MiniDumpWriteDump,
             },
             Threading::{OpenProcess, PROCESS_QUERY_INFORMATION, PROCESS_VM_READ},
-        }, Foundation::{GENERIC_READ, GENERIC_WRITE},
+        },
     },
 };
 

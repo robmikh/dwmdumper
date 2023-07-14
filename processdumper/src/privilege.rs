@@ -3,11 +3,11 @@ use windows::{
     Win32::{
         Foundation::{HANDLE, LUID},
         Security::{
-            AdjustTokenPrivileges, LookupPrivilegeValueW, LUID_AND_ATTRIBUTES,
+            AdjustTokenPrivileges, LookupPrivilegeValueW, LUID_AND_ATTRIBUTES, SE_DEBUG_NAME,
             SE_PRIVILEGE_ENABLED, TOKEN_ADJUST_PRIVILEGES, TOKEN_PRIVILEGES,
-            TOKEN_PRIVILEGES_ATTRIBUTES, SE_DEBUG_NAME,
+            TOKEN_PRIVILEGES_ATTRIBUTES,
         },
-        System:: Threading::{GetCurrentProcess, OpenProcessToken},
+        System::Threading::{GetCurrentProcess, OpenProcessToken},
     },
 };
 
@@ -46,15 +46,7 @@ fn set_privilege(token: &HANDLE, privilege_name: PCWSTR, enable: bool) -> Result
             }],
             ..Default::default()
         };
-        AdjustTokenPrivileges(
-            *token,
-            false,
-            Some(&token_privileges),
-            0,
-            None,
-            None,
-        )
-        .ok()?;
+        AdjustTokenPrivileges(*token, false, Some(&token_privileges), 0, None, None).ok()?;
     }
     Ok(())
 }
