@@ -2,7 +2,7 @@ use windows::{
     core::{Result, HSTRING},
     Win32::{
         Storage::FileSystem::{
-            CreateFileW, CREATE_ALWAYS, FILE_ACCESS_FLAGS, FILE_ATTRIBUTE_NORMAL, FILE_SHARE_MODE,
+            CreateFileW, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, FILE_SHARE_MODE,
         },
         System::{
             Diagnostics::Debug::{
@@ -10,9 +10,8 @@ use windows::{
                 MiniDumpWithHandleData, MiniDumpWithIptTrace, MiniDumpWithThreadInfo,
                 MiniDumpWithTokenInformation, MiniDumpWithUnloadedModules, MiniDumpWriteDump,
             },
-            SystemServices::{GENERIC_READ, GENERIC_WRITE},
             Threading::{OpenProcess, PROCESS_QUERY_INFORMATION, PROCESS_VM_READ},
-        },
+        }, Foundation::{GENERIC_READ, GENERIC_WRITE},
     },
 };
 
@@ -34,9 +33,9 @@ pub fn take_memory_dump(process_id: u32, file_name: &str) -> Result<()> {
         let handle = {
             let handle = CreateFileW(
                 &HSTRING::from(file_name),
-                FILE_ACCESS_FLAGS(GENERIC_READ | GENERIC_WRITE),
+                GENERIC_READ.0 | GENERIC_WRITE.0,
                 FILE_SHARE_MODE(0),
-                std::ptr::null(),
+                None,
                 CREATE_ALWAYS,
                 FILE_ATTRIBUTE_NORMAL,
                 None,
@@ -57,9 +56,9 @@ pub fn take_memory_dump(process_id: u32, file_name: &str) -> Result<()> {
                 | MiniDumpWithTokenInformation
                 | MiniDumpWithAvxXStateContext
                 | MiniDumpWithIptTrace,
-            std::ptr::null_mut(),
-            std::ptr::null_mut(),
-            std::ptr::null_mut(),
+            None,
+            None,
+            None,
         )
         .ok()?;
     }

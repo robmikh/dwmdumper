@@ -88,12 +88,12 @@ fn validate_path<P: AsRef<Path>>(path: P) -> bool {
 fn get_full_path_name(input_path: &str) -> Result<String> {
     let input_path = HSTRING::from(input_path);
     let mut buffer = Vec::<u16>::new();
-    let len = unsafe { GetFullPathNameW(&input_path, &mut buffer, std::ptr::null_mut()) };
+    let len = unsafe { GetFullPathNameW(&input_path, Some(&mut buffer), None) };
     if len == 0 {
         return Err(Error::from_win32());
     }
     buffer.resize(len as usize, 0);
-    let len = unsafe { GetFullPathNameW(&input_path, &mut buffer, std::ptr::null_mut()) };
+    let len = unsafe { GetFullPathNameW(&input_path, Some(&mut buffer), None) };
     if len == 0 {
         return Err(Error::from_win32());
     }

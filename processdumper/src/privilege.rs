@@ -1,16 +1,13 @@
 use windows::{
-    core::{Result, HSTRING},
+    core::{Result, PCWSTR},
     Win32::{
         Foundation::{HANDLE, LUID},
         Security::{
             AdjustTokenPrivileges, LookupPrivilegeValueW, LUID_AND_ATTRIBUTES,
             SE_PRIVILEGE_ENABLED, TOKEN_ADJUST_PRIVILEGES, TOKEN_PRIVILEGES,
-            TOKEN_PRIVILEGES_ATTRIBUTES,
+            TOKEN_PRIVILEGES_ATTRIBUTES, SE_DEBUG_NAME,
         },
-        System::{
-            SystemServices::SE_DEBUG_NAME,
-            Threading::{GetCurrentProcess, OpenProcessToken},
-        },
+        System:: Threading::{GetCurrentProcess, OpenProcessToken},
     },
 };
 
@@ -32,7 +29,7 @@ fn get_process_token() -> Result<AutoCloseHandle> {
     }
 }
 
-fn set_privilege(token: &HANDLE, privilege_name: &str, enable: bool) -> Result<()> {
+fn set_privilege(token: &HANDLE, privilege_name: PCWSTR, enable: bool) -> Result<()> {
     let mut luid = LUID::default();
     let attribute = if enable {
         SE_PRIVILEGE_ENABLED
@@ -40,7 +37,7 @@ fn set_privilege(token: &HANDLE, privilege_name: &str, enable: bool) -> Result<(
         TOKEN_PRIVILEGES_ATTRIBUTES(0)
     };
     unsafe {
-        LookupPrivilegeValueW(None, &HSTRING::from(privilege_name), &mut luid).ok()?;
+        LookupPrivilegeValueW(None, privilege_name, &mut luid).ok()?;
         let token_privileges = TOKEN_PRIVILEGES {
             PrivilegeCount: 1,
             Privileges: [LUID_AND_ATTRIBUTES {
@@ -52,10 +49,10 @@ fn set_privilege(token: &HANDLE, privilege_name: &str, enable: bool) -> Result<(
         AdjustTokenPrivileges(
             *token,
             false,
-            &token_privileges,
+            Some(&token_privileges),
             0,
-            std::ptr::null_mut(),
-            std::ptr::null_mut(),
+            None,
+            None,
         )
         .ok()?;
     }
