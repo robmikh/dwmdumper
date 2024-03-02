@@ -19,7 +19,7 @@ pub fn get_session_for_current_process() -> Result<u32> {
     unsafe {
         let current_pid = GetCurrentProcessId();
         let mut session = 0;
-        ProcessIdToSessionId(current_pid, &mut session).ok()?;
+        ProcessIdToSessionId(current_pid, &mut session)?;
         Ok(session)
     }
 }

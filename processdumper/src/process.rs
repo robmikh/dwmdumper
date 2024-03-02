@@ -1,8 +1,7 @@
 use windows::{
     core::Result,
-    Win32::System::WindowsProgramming::{
-        NtQuerySystemInformation, SystemProcessInformation, SYSTEM_PROCESS_INFORMATION,
-    },
+    Wdk::System::SystemInformation::{NtQuerySystemInformation, SystemProcessInformation},
+    Win32::System::WindowsProgramming::SYSTEM_PROCESS_INFORMATION,
 };
 
 pub struct ProcessInfo {
@@ -32,7 +31,8 @@ impl ProcessIterator {
                 processes_data.as_mut_ptr() as *mut _,
                 processes_len_bytes,
                 &mut processes_len_bytes,
-            )?;
+            )
+            .ok()?;
             assert_eq!(processes_len_bytes as usize, processes_data.len());
             processes_data
         };

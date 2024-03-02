@@ -65,8 +65,7 @@ pub fn get_integrity_level_from_process_token(process_token: &HANDLE) -> Result<
             None,
             0,
             &mut information_length,
-        )
-        .ok();
+        );
         if let Err(error) = &result {
             if error.code() != ERROR_INSUFFICIENT_BUFFER.into() {
                 result?;
@@ -86,8 +85,7 @@ pub fn get_integrity_level_from_process_token(process_token: &HANDLE) -> Result<
             Some(info as *mut _),
             information_length,
             &mut information_length,
-        )
-        .ok()?;
+        )?;
     }
 
     // Get the integrity level from the info we got back

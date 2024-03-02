@@ -1,6 +1,6 @@
 [package]
 name = "dwmdumper"
-version = "0.6.0"
+version = "0.7.0"
 description = "A utility to take a memory dump of DWM.exe."
 edition = "2021"
 
@@ -8,10 +8,11 @@ edition = "2021"
 processdumper = { path = "processdumper" }
 
 [dependencies.windows]
-version = "0.48.0"
+version = "0.54.0"
 features = [
     "Win32_Foundation",
     "Win32_UI_Input_KeyboardAndMouse",
     "Win32_UI_WindowsAndMessaging",
     "Win32_Storage_FileSystem",
+    "Wdk_System_SystemInformation",
 ]

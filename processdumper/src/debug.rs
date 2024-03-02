@@ -58,8 +58,7 @@ pub fn take_memory_dump(process_id: u32, file_name: &str) -> Result<()> {
             None,
             None,
             None,
-        )
-        .ok()?;
+        )?;
     }
 
     Ok(())

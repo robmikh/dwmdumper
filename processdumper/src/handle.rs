@@ -6,7 +6,7 @@ pub struct AutoCloseHandle(pub HANDLE);
 impl Drop for AutoCloseHandle {
     fn drop(&mut self) {
         unsafe {
-            CloseHandle(self.0);
+            let _ = CloseHandle(self.0);
         }
     }
 }
