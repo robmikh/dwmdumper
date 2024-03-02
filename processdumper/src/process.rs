@@ -19,21 +19,28 @@ impl ProcessIterator {
     pub fn new() -> Result<Self> {
         let data = unsafe {
             let mut processes_len_bytes = 0;
-            let _ = NtQuerySystemInformation(
-                SystemProcessInformation,
-                std::ptr::null_mut(),
-                0,
-                &mut processes_len_bytes,
-            );
-            let mut processes_data = vec![0u8; processes_len_bytes as usize];
-            NtQuerySystemInformation(
-                SystemProcessInformation,
-                processes_data.as_mut_ptr() as *mut _,
-                processes_len_bytes,
-                &mut processes_len_bytes,
-            )
-            .ok()?;
-            assert_eq!(processes_len_bytes as usize, processes_data.len());
+            let mut processes_data;
+            // Sometimes the number of bytes can change inbetween calls. Keep
+            // trying until it's stable.
+            loop {
+                let _ = NtQuerySystemInformation(
+                    SystemProcessInformation,
+                    std::ptr::null_mut(),
+                    0,
+                    &mut processes_len_bytes,
+                );
+                processes_data = vec![0u8; processes_len_bytes as usize];
+                NtQuerySystemInformation(
+                    SystemProcessInformation,
+                    processes_data.as_mut_ptr() as *mut _,
+                    processes_len_bytes,
+                    &mut processes_len_bytes,
+                )
+                .ok()?;
+                if processes_len_bytes as usize == processes_data.len() {
+                    break;
+                }
+            }
             processes_data
         };
         Ok(Self {
