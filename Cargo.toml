@@ -14,5 +14,4 @@ features = [
     "Win32_UI_Input_KeyboardAndMouse",
     "Win32_UI_WindowsAndMessaging",
     "Win32_Storage_FileSystem",
-    "Wdk_System_SystemInformation",
 ]
