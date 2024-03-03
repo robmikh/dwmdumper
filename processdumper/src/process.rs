@@ -1,7 +1,10 @@
 use windows::{
     core::Result,
     Wdk::System::SystemInformation::{NtQuerySystemInformation, SystemProcessInformation},
-    Win32::System::WindowsProgramming::SYSTEM_PROCESS_INFORMATION,
+    Win32::{
+        Foundation::STATUS_INFO_LENGTH_MISMATCH,
+        System::WindowsProgramming::SYSTEM_PROCESS_INFORMATION,
+    },
 };
 
 pub struct ProcessInfo {
@@ -23,20 +26,27 @@ impl ProcessIterator {
             // Sometimes the number of bytes can change inbetween calls. Keep
             // trying until it's stable.
             loop {
-                let _ = NtQuerySystemInformation(
+                let result = NtQuerySystemInformation(
                     SystemProcessInformation,
                     std::ptr::null_mut(),
                     0,
                     &mut processes_len_bytes,
                 );
+                if result != STATUS_INFO_LENGTH_MISMATCH {
+                    result.ok()?;
+                }
                 processes_data = vec![0u8; processes_len_bytes as usize];
-                NtQuerySystemInformation(
+                let result = NtQuerySystemInformation(
                     SystemProcessInformation,
                     processes_data.as_mut_ptr() as *mut _,
                     processes_len_bytes,
                     &mut processes_len_bytes,
-                )
-                .ok()?;
+                );
+                if result == STATUS_INFO_LENGTH_MISMATCH {
+                    continue;
+                } else {
+                    result.ok()?;
+                }
                 if processes_len_bytes as usize == processes_data.len() {
                     break;
                 }
