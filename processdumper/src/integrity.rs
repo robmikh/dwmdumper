@@ -107,5 +107,5 @@ pub fn get_integrity_level_from_process_token(process_token: &HANDLE) -> Result<
 }
 
 pub fn get_current_process_token() -> HANDLE {
-    HANDLE(-4)
+    HANDLE(-4 as isize as *mut _)
 }

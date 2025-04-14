@@ -7,7 +7,7 @@ use windows::{
     },
 };
 
-static mut HOT_KEY_ID: AtomicI32 = AtomicI32::new(0);
+static HOT_KEY_ID: AtomicI32 = AtomicI32::new(0);
 
 pub struct HotKey {
     id: i32,
@@ -15,9 +15,9 @@ pub struct HotKey {
 
 impl HotKey {
     pub fn new(modifiers: HOT_KEY_MODIFIERS, key: u32) -> Result<Self> {
-        let id = unsafe { HOT_KEY_ID.fetch_add(1, Ordering::SeqCst) + 1 };
+        let id = HOT_KEY_ID.fetch_add(1, Ordering::SeqCst) + 1;
         unsafe {
-            RegisterHotKey(HWND(0), id, modifiers, key)?;
+            RegisterHotKey(Some(HWND(std::ptr::null_mut())), id, modifiers, key)?;
         }
         Ok(Self { id })
     }
@@ -25,6 +25,10 @@ impl HotKey {
 
 impl Drop for HotKey {
     fn drop(&mut self) {
-        unsafe { UnregisterHotKey(HWND(0), self.id).ok().unwrap() }
+        unsafe {
+            UnregisterHotKey(Some(HWND(std::ptr::null_mut())), self.id)
+                .ok()
+                .unwrap()
+        }
     }
 }

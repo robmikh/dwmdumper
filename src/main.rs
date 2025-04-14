@@ -8,12 +8,9 @@ use processdumper::{
 };
 use windows::{
     core::Result,
-    Win32::{
-        Foundation::HWND,
-        UI::{
-            Input::KeyboardAndMouse::{MOD_CONTROL, MOD_SHIFT},
-            WindowsAndMessaging::{DispatchMessageW, GetMessageW, MSG, WM_HOTKEY},
-        },
+    Win32::UI::{
+        Input::KeyboardAndMouse::{MOD_CONTROL, MOD_SHIFT},
+        WindowsAndMessaging::{DispatchMessageW, GetMessageW, MSG, WM_HOTKEY},
     },
 };
 
@@ -82,7 +79,7 @@ fn pump_messages<F: FnMut() -> Result<bool>>(mut hot_key_callback: F) -> Result<
     let _hot_key = HotKey::new(MOD_SHIFT | MOD_CONTROL, 0x44 /* D */)?;
     unsafe {
         let mut message = MSG::default();
-        while GetMessageW(&mut message, HWND(0), 0, 0).into() {
+        while GetMessageW(&mut message, None, 0, 0).into() {
             if message.message == WM_HOTKEY {
                 if hot_key_callback()? {
                     break;

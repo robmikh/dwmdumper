@@ -23,7 +23,7 @@ fn get_process_token() -> Result<AutoCloseHandle> {
     unsafe {
         // This is a pseudo-handle, so we don't need to close or check it.
         let process_handle = GetCurrentProcess();
-        let mut result = HANDLE(0);
+        let mut result = HANDLE(std::ptr::null_mut());
         OpenProcessToken(process_handle, TOKEN_ADJUST_PRIVILEGES, &mut result)?;
         Ok(AutoCloseHandle(result))
     }
