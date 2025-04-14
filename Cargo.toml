@@ -2,7 +2,7 @@
 name = "dwmdumper"
 version = "0.8.1"
 description = "A utility to take a memory dump of DWM.exe."
-edition = "2021"
+edition = "2024"
 
 [dependencies]
 processdumper = { path = "processdumper" }
