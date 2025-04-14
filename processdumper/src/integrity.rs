@@ -1,10 +1,9 @@
 use windows::{
-    core::Result,
     Win32::{
         Foundation::{ERROR_INSUFFICIENT_BUFFER, HANDLE},
         Security::{
-            GetSidSubAuthority, GetSidSubAuthorityCount, GetTokenInformation, TokenIntegrityLevel,
-            TOKEN_MANDATORY_LABEL,
+            GetSidSubAuthority, GetSidSubAuthorityCount, GetTokenInformation,
+            TOKEN_MANDATORY_LABEL, TokenIntegrityLevel,
         },
         System::SystemServices::{
             SECURITY_MANDATORY_HIGH_RID, SECURITY_MANDATORY_LOW_RID,
@@ -13,6 +12,7 @@ use windows::{
             SECURITY_MANDATORY_UNTRUSTED_RID,
         },
     },
+    core::Result,
 };
 
 // TODO: Why is this the only one expressed as a u32?

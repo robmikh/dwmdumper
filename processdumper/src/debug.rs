@@ -1,8 +1,7 @@
 use windows::{
-    core::{Result, HSTRING},
     Win32::{
         Foundation::{GENERIC_READ, GENERIC_WRITE},
-        Storage::FileSystem::{CreateFileW, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, FILE_SHARE_MODE},
+        Storage::FileSystem::{CREATE_ALWAYS, CreateFileW, FILE_ATTRIBUTE_NORMAL, FILE_SHARE_MODE},
         System::{
             Diagnostics::Debug::{
                 MiniDumpWithAvxXStateContext, MiniDumpWithFullMemory, MiniDumpWithFullMemoryInfo,
@@ -12,6 +11,7 @@ use windows::{
             Threading::{OpenProcess, PROCESS_QUERY_INFORMATION, PROCESS_VM_READ},
         },
     },
+    core::{HSTRING, Result},
 };
 
 use crate::handle::AutoCloseHandle;

@@ -1,14 +1,14 @@
 use windows::{
-    core::{Result, PCWSTR},
     Win32::{
         Foundation::{HANDLE, LUID},
         Security::{
-            AdjustTokenPrivileges, LookupPrivilegeValueW, LUID_AND_ATTRIBUTES, SE_DEBUG_NAME,
+            AdjustTokenPrivileges, LUID_AND_ATTRIBUTES, LookupPrivilegeValueW, SE_DEBUG_NAME,
             SE_PRIVILEGE_ENABLED, TOKEN_ADJUST_PRIVILEGES, TOKEN_PRIVILEGES,
             TOKEN_PRIVILEGES_ATTRIBUTES,
         },
         System::Threading::{GetCurrentProcess, OpenProcessToken},
     },
+    core::{PCWSTR, Result},
 };
 
 use crate::handle::AutoCloseHandle;

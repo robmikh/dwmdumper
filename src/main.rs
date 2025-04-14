@@ -3,15 +3,15 @@ mod hotkey;
 
 use hotkey::HotKey;
 use processdumper::{
-    find_process_id_with_name_in_session, get_integrity_level_for_current_process,
-    get_session_for_current_process, set_debug_privilege, take_memory_dump, IntegrityLevel,
+    IntegrityLevel, find_process_id_with_name_in_session, get_integrity_level_for_current_process,
+    get_session_for_current_process, set_debug_privilege, take_memory_dump,
 };
 use windows::{
-    core::Result,
     Win32::UI::{
         Input::KeyboardAndMouse::{MOD_CONTROL, MOD_SHIFT},
         WindowsAndMessaging::{DispatchMessageW, GetMessageW, MSG, WM_HOTKEY},
     },
+    core::Result,
 };
 
 use crate::cli::{Args, ExecutionMode};

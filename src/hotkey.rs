@@ -1,10 +1,10 @@
 use std::sync::atomic::{AtomicI32, Ordering};
 use windows::{
-    core::Result,
     Win32::{
         Foundation::HWND,
-        UI::Input::KeyboardAndMouse::{RegisterHotKey, UnregisterHotKey, HOT_KEY_MODIFIERS},
+        UI::Input::KeyboardAndMouse::{HOT_KEY_MODIFIERS, RegisterHotKey, UnregisterHotKey},
     },
+    core::Result,
 };
 
 static HOT_KEY_ID: AtomicI32 = AtomicI32::new(0);

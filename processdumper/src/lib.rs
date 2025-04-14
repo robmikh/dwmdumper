@@ -11,8 +11,8 @@ pub use privilege::set_debug_privilege;
 use integrity::{get_current_process_token, get_integrity_level_from_process_token};
 use process::ProcessIterator;
 use windows::{
-    core::Result,
     Win32::System::{RemoteDesktop::ProcessIdToSessionId, Threading::GetCurrentProcessId},
+    core::Result,
 };
 
 pub fn get_session_for_current_process() -> Result<u32> {

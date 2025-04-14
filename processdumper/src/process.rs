@@ -1,10 +1,10 @@
 use windows::{
-    core::Result,
     Wdk::System::SystemInformation::{NtQuerySystemInformation, SystemProcessInformation},
     Win32::{
         Foundation::STATUS_INFO_LENGTH_MISMATCH,
         System::WindowsProgramming::SYSTEM_PROCESS_INFORMATION,
     },
+    core::Result,
 };
 
 pub struct ProcessInfo {

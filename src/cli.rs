@@ -1,8 +1,8 @@
 use std::path::Path;
 
 use windows::{
-    core::{Error, Result, HSTRING},
     Win32::Storage::FileSystem::GetFullPathNameW,
+    core::{Error, HSTRING, Result},
 };
 
 #[derive(Copy, Clone, Debug)]
